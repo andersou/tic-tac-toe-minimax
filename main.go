@@ -160,15 +160,15 @@ func PrintMemUsage() {
 	runtime.ReadMemStats(&m)
 	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
 	fmt.Printf("\n\n---------------------\n")
-	fmt.Printf("Alloc = %v MiB\n", bToMb(m.Alloc))
-	fmt.Printf("TotalAlloc = %v MiB\n", bToMb(m.TotalAlloc))
-	fmt.Printf("Sys = %v MiB\n", bToMb(m.Sys))
-	fmt.Printf("NumGC = %v\n", m.NumGC)
+	fmt.Printf("Alloc = %.2f MiB\n", bToMb(m.Alloc))
+	fmt.Printf("TotalAlloc = %.2f MiB\n", bToMb(m.TotalAlloc))
+	fmt.Printf("Sys = %.2f MiB\n", bToMb(m.Sys))
+	fmt.Printf("NumGC = %d\n", m.NumGC)
 	fmt.Printf("---------------------\n\n")
 }
 
-func bToMb(b uint64) uint64 {
-	return b / 1024 / 1024
+func bToMb(b uint64) float64 {
+	return float64(b) / 1024 / 1024
 }
 
 func main() {
