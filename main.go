@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"runtime"
+	"time"
+)
 
 type Jogador int8
 
@@ -149,12 +153,37 @@ func calculaMinimax(nodo *Nodo) int8 {
 	}
 	return minimax
 }
+
+//copiado da net -- bench de memoria
+func PrintMemUsage() {
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+	// For info on each, see: https://golang.org/pkg/runtime/#MemStats
+	fmt.Printf("---------------------\n")
+	fmt.Printf("Alloc = %v MiB\n", bToMb(m.Alloc))
+	fmt.Printf("TotalAlloc = %v MiB\n", bToMb(m.TotalAlloc))
+	fmt.Printf("Sys = %v MiB\n", bToMb(m.Sys))
+	fmt.Printf("NumGC = %v\n", m.NumGC)
+	fmt.Printf("---------------------\n")
+}
+
+func bToMb(b uint64) uint64 {
+	return b / 1024 / 1024
+}
+
 func main() {
+	PrintMemUsage()
 	//primeiro nodo
+	fmt.Println("\n\x1b[100m\t------------------------	\x1b[0m")
+	fmt.Println("\x1b[100m\tGerando árvore dos jogos	\x1b[0m")
+	fmt.Println("\x1b[100m\t------------------------	\x1b[0m\n")
+	inicio := time.Now()
 	n := Nodo{}
 	n.conteudo = &Estado{jogadorAtual: Jogador1}
 	placar := constroiArvore(&n)
-	fmt.Printf("Quantidade de estados totais \t%d \nQuantidade de Empates \t\t%d\nQuantidade de Vitória J1 \t%d \nQuantidade de Vitória J2 \t%d \n", qtdeNodos(&n), placar[0], placar[1], placar[2])
-	fmt.Printf("Valor Minimax  \t\t\t%d\n", calculaMinimax(&n))
-
+	minimax := calculaMinimax(&n)
+	fim := time.Now()
+	fmt.Printf("Quantidade de estados totais \t\x1b[35m%d\t\x1b[0m \nQuantidade de Empates \t\t\x1b[35m%d\t\x1b[0m\nQuantidade de Vitória J1 \t\x1b[35m%d\t\x1b[0m \nQuantidade de Vitória J2 \t\x1b[35m%d\t\x1b[0m \n", qtdeNodos(&n), placar[0], placar[1], placar[2])
+	fmt.Printf("Valor Minimax  \t\t\t\x1b[35m%d\t\x1b[0m\nTempo total  \t\t\t\x1b[35m%v\x1b[0m\n ", minimax, fim.Sub(inicio))
+	PrintMemUsage()
 }
